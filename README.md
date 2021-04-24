@@ -11,4 +11,4 @@ object detection\
 opencv\
 pcl\
 electrical parts\
-3d modeling\
+3d modeling
