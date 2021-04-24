@@ -8,7 +8,7 @@ navigation slam amcl
 precise motion (approach)
 behaviour statemachine
 object detection
-opencv
-pcl
-electrical parts
-3d modeling
+opencv\
+pcl\
+electrical parts \
+3d modeling \
