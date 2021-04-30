@@ -1,16 +1,15 @@
 # youbot_master_thesis_or_project
 demonstration:\
 overview:\
-techonolgies and use:\
--Overview
 ROS\
--Manipulation moveit\
--Navigation slam amcl\
-precise motion (approach)\
--Behaviour statemachine\
+techonolgies and use:\
 -Computer vision
 object detection\
 opencv\
 pcl\
+-Manipulation moveit\
+-Navigation slam amcl\
+precise motion (approach)\
+-Behaviour statemachine\
 -Electrical parts\
 -3d modeling
