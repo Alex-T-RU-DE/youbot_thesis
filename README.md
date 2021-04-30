@@ -2,13 +2,15 @@
 demonstration:\
 overview:\
 techonolgies and use:\
+-Overview
 ROS\
-manipulation moveit\
-navigation slam amcl\
+-Manipulation moveit\
+-Navigation slam amcl\
 precise motion (approach)\
-behaviour statemachine\
+-Behaviour statemachine\
+-Computer vision
 object detection\
 opencv\
 pcl\
-electrical parts\
-3d modeling
+- Electrical parts\
+- 3d modeling
