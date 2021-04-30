@@ -12,5 +12,5 @@ precise motion (approach)\
 object detection\
 opencv\
 pcl\
-- Electrical parts\
-- 3d modeling
+-Electrical parts\
+-3d modeling
