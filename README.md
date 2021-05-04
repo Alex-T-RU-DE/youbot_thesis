@@ -8,7 +8,7 @@ object detection\
 opencv\
 pcl\
 -Manipulation moveit\
--Navigation slam amcl\
+-[Navigation](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/Navigation) slam amcl\
 precise motion (approach)\
 -Behaviour statemachine\
 -Electrical parts\
