@@ -7,7 +7,7 @@ techonolgies and use:\
 object detection\
 opencv\
 pcl\
--Manipulation moveit\
+-[Manipulation](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/Manipulation) \
 -[Navigation](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/Navigation) \
 -Behaviour statemachine\
 -Electrical parts\
