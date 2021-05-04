@@ -12,4 +12,4 @@ pcl\
 precise motion (approach)\
 -Behaviour statemachine\
 -Electrical parts\
--(3d modeling)[https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/3D-models]
+-[3d modeling](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/3D-models)
