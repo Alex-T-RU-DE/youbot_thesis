@@ -1,4 +1,4 @@
-# youbot_master_thesis_or_project
+# youbot_master_thesis
 demonstration:\
 overview:\
 ROS\
