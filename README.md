@@ -1,7 +1,3 @@
-![maxresdefault (4) (1)](https://user-images.githubusercontent.com/68658068/117088966-56cbff80-ad54-11eb-87f8-2639c00be7b4.jpg)
-![maxresdefault (5)](https://user-images.githubusercontent.com/68658068/117089002-7a8f4580-ad54-11eb-9ccf-c3806212b81c.jpg)
-
-
 # youbot_master_thesis
 **Overview:**
 ROS\
