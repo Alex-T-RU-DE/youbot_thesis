@@ -1,5 +1,3 @@
-![Screenshot from 2021-04-11 16-14-33 (1)](https://user-images.githubusercontent.com/68658068/117091095-8978f680-ad5a-11eb-8bb7-c9729c2dcfe5.png)
-
 # youbot_master_thesis
 **Overview:**
 ROS\
