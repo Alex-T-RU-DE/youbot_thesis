@@ -1,6 +1,3 @@
-[![maxresdefault (7)](https://user-images.githubusercontent.com/68658068/117089677-72380a00-ad56-11eb-9a53-c3c143c88042.jpg)](https://www.youtube.com/watch?v=LGMB8PAWDYQ&ab_channel=AlexT)
-[![maxresdefault (6)](https://user-images.githubusercontent.com/68658068/117089678-72d0a080-ad56-11eb-8a38-d7307db1262d.jpg)](https://www.youtube.com/watch?v=Qk4FWbUZ-5A&ab_channel=AlexT)
-
 # youbot_master_thesis
 **Overview:**
 ROS\
