@@ -1,6 +1,6 @@
 # youbot_master_thesis
 **Overview:**
-<img src="https://user-images.githubusercontent.com/68658068/117144515-4cd8e980-adb2-11eb-97a5-2092d1c4e241.jpg">
+<img src="https://user-images.githubusercontent.com/68658068/117144515-4cd8e980-adb2-11eb-97a5-2092d1c4e241.jpg" width="50%" height="50%">
 <img src="https://user-images.githubusercontent.com/68658068/117140087-472cd500-adad-11eb-933b-a64af6e81570.png" width="50%" height="50%">
 
 ROS\
