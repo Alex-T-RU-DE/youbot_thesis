@@ -1,5 +1,6 @@
 # youbot_master_thesis
 **Overview:**
+The purpose of this project is a development of an autonomous mobile robot for [RoboCup@Work](https://github.com/robocup-at-work) competition. The robot is based on KUKA Youbot and can perform various tasks such as autonomous manipulation, computer vision, navigation, task planning.
 
 <img src="https://user-images.githubusercontent.com/68658068/117144515-4cd8e980-adb2-11eb-97a5-2092d1c4e241.jpg" width="50%" height="50%">
 <img src="https://user-images.githubusercontent.com/68658068/117140087-472cd500-adad-11eb-933b-a64af6e81570.png" width="50%" height="50%">
