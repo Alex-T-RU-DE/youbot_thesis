@@ -8,7 +8,6 @@ ROS\
 [![maxresdefault (2) (1)](https://user-images.githubusercontent.com/68658068/117087285-4402fc00-ad4f-11eb-93e4-a5b02784261c.jpg)](https://youtu.be/QkStWA19vPg)
 
 **Areas of work:**
-
 -[Manipulation](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/Manipulation) \
 -[Computer vision](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/Computer-vision) \
 -[Navigation](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/Navigation) \
