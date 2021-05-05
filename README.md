@@ -1,3 +1,6 @@
+![gripper_box](https://user-images.githubusercontent.com/68658068/117090117-c5f72300-ad57-11eb-9416-ce416e146636.jpg)
+![20210315_203731](https://user-images.githubusercontent.com/68658068/117090159-e0310100-ad57-11eb-830d-4dae0cdf78c6.jpg)
+
 # youbot_master_thesis
 **Overview:**
 ROS\
