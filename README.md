@@ -1,3 +1,4 @@
+![maxresdefault (8)](https://user-images.githubusercontent.com/68658068/117090731-6b5ec680-ad59-11eb-8711-82976f878be8.jpg)
 # youbot_master_thesis
 **Overview:**
 ROS\
