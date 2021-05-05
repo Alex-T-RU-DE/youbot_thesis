@@ -1,8 +1,7 @@
 # youbot_master_thesis
 demonstration:\
 
-[![maxresdefault2](https://user-images.githubusercontent.com/68658068/117086570-2fbdff80-ad4d-11eb-936a-d4adf72555d0.jpg)](https://youtu.be/eHf56aguuII) [![maxresdefault2](https://user-images.githubusercontent.com/68658068/117086570-2fbdff80-ad4d-11eb-936a-d4adf72555d0.jpg)](https://youtu.be/eHf56aguuII)
-
+[![1 jpg](https://user-images.githubusercontent.com/68658068/117086732-b07cfb80-ad4d-11eb-9c62-8695d4d3e9f1.png)](https://youtu.be/eHf56aguuII)
 
 overview:\
 ROS\
