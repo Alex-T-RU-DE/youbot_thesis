@@ -1,5 +1,6 @@
 ![20210315_203731 (2)](https://user-images.githubusercontent.com/68658068/117090219-05be0a80-ad58-11eb-83ba-5bfc40ef4930.jpg)
-![20210315_203731 (1)](https://user-images.githubusercontent.com/68658068/117090223-0787ce00-ad58-11eb-9c29-8695cc726266.jpg)
+![gripper_box (1)](https://user-images.githubusercontent.com/68658068/117090262-2e460480-ad58-11eb-9480-99ba04381d40.jpg)
+
 
 
 # youbot_master_thesis
