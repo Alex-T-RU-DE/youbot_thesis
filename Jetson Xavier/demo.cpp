@@ -43,108 +43,106 @@
 class RosYolo
 {
 public:
-    //detection results publisher
-    ros::NodeHandle n_;
-    ros::Publisher yoloBoxesPub_;
-	
-    //camera intrinsics
-    Eigen::Matrix3d invCamIntrinsics_;
-	
-    //cvbridge frames
-    cv_bridge::CvImagePtr rgbFramePtr_;
-	
-    //synchronized subscribers
-    message_filters::Subscriber<sensor_msgs::Image> rgbSub_;
-    message_filters::Subscriber<sensor_msgs::PointCloud2> pcloudSub_;
-    message_filters::TimeSynchronizer<sensor_msgs::Image, sensor_msgs::PointCloud2> sync_;
-	
-    //pcl variables
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcloudFramePtr_;
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr filteredcloudPtr_;
-    pcl::visualization::PCLVisualizer::Ptr viewer_;
-	
-    //tf variables
-    tf2_ros::Buffer tfBuffer_;
-    tf2_ros::TransformListener tfListener_;
-    geometry_msgs::TransformStamped currentCamInBaseFrame_;
-    float currentPlaneHeight_ = 0;
-    
-     //flags to show cloud and camera 
-    bool showImage_ = false;
-    bool showCloud_ = false;
-    
-    //tkDNN default params
+	//detection results publisher
+	ros::NodeHandle n_;
+	ros::Publisher yoloBoxesPub_;
+
+	//camera intrinsics
+	Eigen::Matrix3d invCamIntrinsics_;
+
+	//cvbridge frames
+	cv_bridge::CvImagePtr rgbFramePtr_;
+
+	//synchronized subscribers
+	message_filters::Subscriber<sensor_msgs::Image> rgbSub_;
+	message_filters::Subscriber<sensor_msgs::PointCloud2> pcloudSub_;
+	message_filters::TimeSynchronizer<sensor_msgs::Image, sensor_msgs::PointCloud2> sync_;
+
+	//pcl variables
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcloudFramePtr_;
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr filteredcloudPtr_;
+	pcl::visualization::PCLVisualizer::Ptr viewer_;
+
+	//tf variables
+	tf2_ros::Buffer tfBuffer_;
+	tf2_ros::TransformListener tfListener_;
+	geometry_msgs::TransformStamped currentCamInBaseFrame_;
+	float currentPlaneHeight_ = 0;
+
+	//flags to show cloud and camera 
+	bool showImage_ = false;
+	bool showCloud_ = false;
+
+	//tkDNN default params
 	std::string net;
-    int n_classes;
-    int n_batch;
-    float conf_thresh;
-    
+	int n_classes;
+	int n_batch;
+	float conf_thresh;
+
 	tk::dnn::Yolo3Detection yolo;
-    tk::dnn::DetectionNN *detNN; 
+	tk::dnn::DetectionNN *detNN; 
+
+	std::vector<cv::Mat> batch_frame;
+	std::vector<cv::Mat> batch_dnn_input;
     
-    std::vector<cv::Mat> batch_frame;
-    std::vector<cv::Mat> batch_dnn_input;
-    
-   
-    
-    RosYolo(bool show_im, bool show_cl) : rgbSub_(n_, "/camera/color/image_raw", 1),
+	RosYolo(bool show_im, bool show_cl) : rgbSub_(n_, "/camera/color/image_raw", 1),
 					  pcloudSub_(n_, "/camera/depth_registered/points",1),
 					  sync_(rgbSub_, pcloudSub_, 10),
 					  pcloudFramePtr_(new pcl::PointCloud<pcl::PointXYZRGB>),
 					  filteredcloudPtr_(new pcl::PointCloud<pcl::PointXYZRGB>),
 					  tfListener_(tfBuffer_)
-    { 
-	//get flags
-	showImage_ = show_im;
-	showCloud_ = show_cl;
+	{ 
+		//get flags
+		showImage_ = show_im;
+		showCloud_ = show_cl;
 
-	//get inverted camera intrinsics for deprojection
-	std::cout << "waiting for camera intrinsics" << std::endl;
-	sensor_msgs::CameraInfo::ConstPtr camInfo = ros::topic::waitForMessage<sensor_msgs::CameraInfo>("/camera/aligned_depth_to_color/camera_info",n_);   
-	std::cout << "intrinsics received" << std::endl;   
+		//get inverted camera intrinsics for deprojection
+		std::cout << "waiting for camera intrinsics" << std::endl;
+		sensor_msgs::CameraInfo::ConstPtr camInfo = ros::topic::waitForMessage<sensor_msgs::CameraInfo>("/camera/aligned_depth_to_color/camera_info",n_);   
+		std::cout << "intrinsics received" << std::endl;   
 
-	Eigen::Matrix<double,3,3,Eigen::RowMajor> camIntrinsics ( camInfo->K.data() );
-	invCamIntrinsics_ = camIntrinsics.inverse();
+		Eigen::Matrix<double,3,3,Eigen::RowMajor> camIntrinsics ( camInfo->K.data() );
+		invCamIntrinsics_ = camIntrinsics.inverse();
 
-	//init publishers and subscribers
-	sync_.registerCallback(&RosYolo::cameraCallback_, this);
-	yoloBoxesPub_ = n_.advertise<vision_youbot::DetectedObjArr>("detected_objects", 1);
+		//init publishers and subscribers
+		sync_.registerCallback(&RosYolo::cameraCallback_, this);
+		yoloBoxesPub_ = n_.advertise<vision_youbot::DetectedObjArr>("detected_objects", 1);
 
-	//create cloud viewer
-	if(showCloud_)
-	{
-		pcl::visualization::PCLVisualizer::Ptr v (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-		viewer_ = v;
+		//create cloud viewer
+		if(showCloud_)
+		{
+			pcl::visualization::PCLVisualizer::Ptr v (new pcl::visualization::PCLVisualizer ("3D Viewer"));
+			viewer_ = v;
 
-		viewer_->setBackgroundColor(0, 0, 0);
-		viewer_->addCoordinateSystem();
-		viewer_->initCameraParameters();
+			viewer_->setBackgroundColor(0, 0, 0);
+			viewer_->addCoordinateSystem();
+			viewer_->initCameraParameters();
+		}
+
+		//create image window
+		if(showImage_)
+		{
+			cv::namedWindow("detection", cv::WINDOW_NORMAL);
+		}
+
+		//init tkDNN
+		net = "yolo4_custom_fp16.rt";
+		n_classes = 2;
+		n_batch = 1;
+		conf_thresh=0.3;   
+
+		detNN = &yolo;
+		detNN->init(net, n_classes, n_batch, conf_thresh);
 	}
 
-	//create image window
-	if(showImage_)
+	~RosYolo()
 	{
-		cv::namedWindow("detection", cv::WINDOW_NORMAL);
+
 	}
-
-	//init tkDNN
-	net = "yolo4_custom_fp16.rt";
-	n_classes = 2;
-	n_batch = 1;
-	conf_thresh=0.3;   
-
-	detNN = &yolo;
-	detNN->init(net, n_classes, n_batch, conf_thresh);
-    }
-
-    ~RosYolo()
-    {
-	  
-    }
     
-    //callback from camera
-    void cameraCallback_(const sensor_msgs::Image::ConstPtr& rgbmsg, const sensor_msgs::PointCloud2ConstPtr& pcloudmsg)
-    {
+	//callback from camera
+	void cameraCallback_(const sensor_msgs::Image::ConstPtr& rgbmsg, const sensor_msgs::PointCloud2ConstPtr& pcloudmsg)
+	{
 		//get tf
 		try
 		{	
@@ -211,37 +209,37 @@ public:
 
 int main(int argc, char *argv[]) 
 {
-    //init ros node
-    ros::init(argc, argv, "jetson_yolo_node");
+	//init ros node
+	ros::init(argc, argv, "jetson_yolo_node");
  
-    //get args
+    	//get args
 	bool showImage_ = false;
 	bool showCloud_ = false;
     
-    std::cout<<"detection end\n"; 
+	std::cout<<"detection end\n"; 
     
     
 	if(argc > 2)
-        showImage_ = atoi(argv[2]); 
-    if(argc > 3)
-        showCloud_ = atoi(argv[3]);
+        	showImage_ = atoi(argv[2]); 
+	if(argc > 3)
+        	showCloud_ = atoi(argv[3]);
          
-    //init 
-    RosYolo ry(showImage_, showCloud_);
-    
+	//init 
+	RosYolo ry(showImage_, showCloud_);
+
 	ros::spin();
 
 	//evaluate tkDNN
-    std::cout<<"detection end\n";   
-    double mean = 0; 
-    
-    std::cout<<COL_GREENB<<"\n\nTime stats:\n";
-    std::cout<<"Min: "<<*std::min_element(ry.detNN->stats.begin(), ry.detNN->stats.end())/ry.n_batch<<" ms\n";    
-    std::cout<<"Max: "<<*std::max_element(ry.detNN->stats.begin(), ry.detNN->stats.end())/ry.n_batch<<" ms\n";    
-    for(int i=0; i<ry.detNN->stats.size(); i++) mean += ry.detNN->stats[i]; mean /= ry.detNN->stats.size();
-    std::cout<<"Avg: "<<mean/ry.n_batch<<" ms\t"<<1000/(mean/ry.n_batch)<<" FPS\n"<<COL_END;   
-    
+	std::cout<<"detection end\n";   
+	double mean = 0; 
 
-    return 0;
+	std::cout<<COL_GREENB<<"\n\nTime stats:\n";
+	std::cout<<"Min: "<<*std::min_element(ry.detNN->stats.begin(), ry.detNN->stats.end())/ry.n_batch<<" ms\n";    
+	std::cout<<"Max: "<<*std::max_element(ry.detNN->stats.begin(), ry.detNN->stats.end())/ry.n_batch<<" ms\n";    
+	for(int i=0; i<ry.detNN->stats.size(); i++) mean += ry.detNN->stats[i]; mean /= ry.detNN->stats.size();
+	std::cout<<"Avg: "<<mean/ry.n_batch<<" ms\t"<<1000/(mean/ry.n_batch)<<" FPS\n"<<COL_END;   
+
+
+	return 0;
 }
 
