@@ -179,37 +179,37 @@ class DetectionNN {
 				
                 // draw dets
                 if(batchDetected[bi].size()>0){
-					int a;
-					a = 2;
-					for(int i=0; i<batchDetected[bi].size(); i++) { 
-						b           = batchDetected[bi][i];
-						x0   		= b.x;
-						x1   		= b.x + b.w;
-						y0   		= b.y;
-						y1   		= b.y + b.h;
-						det_class 	= classesNames[b.cl];
-						
-						// draw rectangle
-						cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point(x1, y1), colors[b.cl], 2); 
+			int a;
+			a = 2;
+			for(int i=0; i<batchDetected[bi].size(); i++) { 
+				b           = batchDetected[bi][i];
+				x0   		= b.x;
+				x1   		= b.x + b.w;
+				y0   		= b.y;
+				y1   		= b.y + b.h;
+				det_class 	= classesNames[b.cl];
 
-						// draw label
-						cv::Size text_size = getTextSize(det_class, cv::FONT_HERSHEY_SIMPLEX, font_scale, thickness, &baseline);
-						cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point((x0 + text_size.width - 2), (y0 - text_size.height - 2)), colors[b.cl], -1);                      
-						cv::putText(frames[bi], det_class+" "+ std::to_string(b.prob), cv::Point(x0, (y0 - (baseline / 2))), cv::FONT_HERSHEY_SIMPLEX, font_scale, cv::Scalar(255, 255, 255), thickness);
-						
-					}
-				}
+				// draw rectangle
+				cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point(x1, y1), colors[b.cl], 2); 
+
+				// draw label
+				cv::Size text_size = getTextSize(det_class, cv::FONT_HERSHEY_SIMPLEX, font_scale, thickness, &baseline);
+				cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point((x0 + text_size.width - 2), (y0 - text_size.height - 2)), colors[b.cl], -1);                      
+				cv::putText(frames[bi], det_class+" "+ std::to_string(b.prob), cv::Point(x0, (y0 - (baseline / 2))), cv::FONT_HERSHEY_SIMPLEX, font_scale, cv::Scalar(255, 255, 255), thickness);
+
+			}
+		}
            
             }    
         }
         
-        void drawYOLO(float planeHeight, 
-				  	  geometry_msgs::TransformStamped& camToBase, 
-					  Eigen::Matrix3d inv_cam_intrinsics, 
-					  pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, 
-					  std::vector<cv::Mat>& frames, 
-					  ros::Publisher& pub,
-					  bool showImage) {
+        void drawYOLO(  float planeHeight, 
+			geometry_msgs::TransformStamped& camToBase, 
+			Eigen::Matrix3d inv_cam_intrinsics, 
+			pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, 
+			std::vector<cv::Mat>& frames, 
+			ros::Publisher& pub,
+			bool showImage) {
 			//bbox parameters
             tk::dnn::box b;
             int x0, w, x1, y0, h, y1;
@@ -222,93 +222,93 @@ class DetectionNN {
             
             for(int bi=0; bi<frames.size(); ++bi){
                 if(batchDetected[bi].size()>0){
-					vision_youbot::DetectedObjArr boxes_array;
-					
-					for(int i=0; i<batchDetected[bi].size(); i++) { 
-						b           = batchDetected[bi][i];
-						x0   		= b.x;
-						x1   		= b.x + b.w;
-						y0   		= b.y;
-						y1   		= b.y + b.h;
-						det_class 	= classesNames[b.cl];
-						
-						//crop bbox
-						float xs = b.x-10;
-						float ys = b.y-10;
-						float wi = b.w+10;
-						float hi = b.h+10;
-						if(xs < 0){
-							xs = 0;
-						} else if (xs > frames[bi].cols){
-							xs = frames[bi].cols;
-						} if(ys<0){
-							ys = 0;
-						} else if (ys > frames[bi].rows){
-							ys = frames[bi].rows;
-						} if(xs+wi > frames[bi].cols){
-							wi = frames[bi].cols-xs;
-						} if(ys+hi > frames[bi].rows){
-							hi= frames[bi].rows-ys;
-						}
-						
-						cv::Rect crop_region(xs, ys, wi, hi);
-						cv::Mat croppedImg = frames[bi](crop_region);
-						
-						//output obj
-						vision_youbot::DetectedObj objectMsg;
-					
-						//get object height
-						float objectHeight = youbot_utils::getObjectHeight(xs, ys, wi, hi, planeHeight, cloud, camToBase);
-						//object size points
-						std::vector<cv::Point> centroidAndAngle = youbot_opencv::getObjectPose(xs, ys, croppedImg, b.cl, showImage);
-						
-						if(!centroidAndAngle.empty()){
-							float massCenterHeight = planeHeight+objectHeight/2;
-							//get 3D size points in robot frame
-							cv::Point2f center = youbot_utils::getPointOnPlane(centroidAndAngle.at(0), massCenterHeight, inv_cam_intrinsics, camToBase);
-							cv::Point2f anglePoint = youbot_utils::getPointOnPlane(centroidAndAngle.at(1), massCenterHeight, inv_cam_intrinsics, camToBase);
-							
-							//get the state of an object (stays vertically/lies horizontally)
-							if(b.cl == 1 || b.cl == 5 || b.cl == 7){ 					
-								float objectWidth = youbot_utils::getObjectWidth(centroidAndAngle.at(0), centroidAndAngle.at(2), massCenterHeight, inv_cam_intrinsics, camToBase);
-								youbot_utils::getObjectState(objectHeight, objectWidth, b.cl, objectMsg);
-							} else{
-								youbot_utils::getObjectState(objectHeight, 0, b.cl, objectMsg);
-							}
-							
-							//calculate object orientation
-							float angle  = std::atan2(anglePoint.x-center.x, anglePoint.y-center.y);
-							angle = angle + 1.571;
-							if(angle < -1.571){
-								angle = angle + 3.141;
-							} else if (angle > 1.571){
-								angle = angle - 3.141;
-							}
-							
-							//fill output array
-							objectMsg.x = center.x;
-							objectMsg.y = center.y;
-							objectMsg.angle = angle;
-							objectMsg.h = objectHeight;
-							objectMsg.plane_h = planeHeight;
-							
-							std::cout << objectMsg.name << " " << std::endl;
-							
-							boxes_array.objects.push_back(objectMsg);
-						}
-						
-						if(showImage){
-							cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point(x1, y1), colors[b.cl], 2); 
-							cv::Size text_size = getTextSize(det_class, cv::FONT_HERSHEY_SIMPLEX, font_scale, thickness, &baseline);
-							cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point((x0 + text_size.width - 2), (y0 - text_size.height - 2)), colors[b.cl], -1);                      
-							cv::putText(frames[bi], det_class+" "+ std::to_string(b.prob), cv::Point(x0, (y0 - (baseline / 2))), cv::FONT_HERSHEY_SIMPLEX, font_scale, cv::Scalar(255, 255, 255), thickness);
-						}
-						
-						
-					}
-					//publish detected objects
-					pub.publish(boxes_array);
+			vision_youbot::DetectedObjArr boxes_array;
+
+			for(int i=0; i<batchDetected[bi].size(); i++) { 
+				b           = batchDetected[bi][i];
+				x0   		= b.x;
+				x1   		= b.x + b.w;
+				y0   		= b.y;
+				y1   		= b.y + b.h;
+				det_class 	= classesNames[b.cl];
+
+				//crop bbox
+				float xs = b.x-10;
+				float ys = b.y-10;
+				float wi = b.w+10;
+				float hi = b.h+10;
+				if(xs < 0){
+					xs = 0;
+				} else if (xs > frames[bi].cols){
+					xs = frames[bi].cols;
+				} if(ys<0){
+					ys = 0;
+				} else if (ys > frames[bi].rows){
+					ys = frames[bi].rows;
+				} if(xs+wi > frames[bi].cols){
+					wi = frames[bi].cols-xs;
+				} if(ys+hi > frames[bi].rows){
+					hi= frames[bi].rows-ys;
 				}
+
+				cv::Rect crop_region(xs, ys, wi, hi);
+				cv::Mat croppedImg = frames[bi](crop_region);
+
+				//output obj
+				vision_youbot::DetectedObj objectMsg;
+
+				//get object height
+				float objectHeight = youbot_utils::getObjectHeight(xs, ys, wi, hi, planeHeight, cloud, camToBase);
+				//object size points
+				std::vector<cv::Point> centroidAndAngle = youbot_opencv::getObjectPose(xs, ys, croppedImg, b.cl, showImage);
+
+				if(!centroidAndAngle.empty()){
+					float massCenterHeight = planeHeight+objectHeight/2;
+					//get 3D size points in robot frame
+					cv::Point2f center = youbot_utils::getPointOnPlane(centroidAndAngle.at(0), massCenterHeight, inv_cam_intrinsics, camToBase);
+					cv::Point2f anglePoint = youbot_utils::getPointOnPlane(centroidAndAngle.at(1), massCenterHeight, inv_cam_intrinsics, camToBase);
+
+					//get the state of an object (stays vertically/lies horizontally)
+					if(b.cl == 1 || b.cl == 5 || b.cl == 7){ 					
+						float objectWidth = youbot_utils::getObjectWidth(centroidAndAngle.at(0), centroidAndAngle.at(2), massCenterHeight, inv_cam_intrinsics, camToBase);
+						youbot_utils::getObjectState(objectHeight, objectWidth, b.cl, objectMsg);
+					} else{
+						youbot_utils::getObjectState(objectHeight, 0, b.cl, objectMsg);
+					}
+
+					//calculate object orientation
+					float angle  = std::atan2(anglePoint.x-center.x, anglePoint.y-center.y);
+					angle = angle + 1.571;
+					if(angle < -1.571){
+						angle = angle + 3.141;
+					} else if (angle > 1.571){
+						angle = angle - 3.141;
+					}
+
+					//fill output array
+					objectMsg.x = center.x;
+					objectMsg.y = center.y;
+					objectMsg.angle = angle;
+					objectMsg.h = objectHeight;
+					objectMsg.plane_h = planeHeight;
+
+					std::cout << objectMsg.name << " " << std::endl;
+
+					boxes_array.objects.push_back(objectMsg);
+				}
+
+				if(showImage){
+					cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point(x1, y1), colors[b.cl], 2); 
+					cv::Size text_size = getTextSize(det_class, cv::FONT_HERSHEY_SIMPLEX, font_scale, thickness, &baseline);
+					cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point((x0 + text_size.width - 2), (y0 - text_size.height - 2)), colors[b.cl], -1);                      
+					cv::putText(frames[bi], det_class+" "+ std::to_string(b.prob), cv::Point(x0, (y0 - (baseline / 2))), cv::FONT_HERSHEY_SIMPLEX, font_scale, cv::Scalar(255, 255, 255), thickness);
+				}
+
+
+			}
+			//publish detected objects
+			pub.publish(boxes_array);
+		}
            
             }    
         }
