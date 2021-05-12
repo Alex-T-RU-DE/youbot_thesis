@@ -5,7 +5,7 @@ The purpose of this project is a development of an autonomous mobile robot for [
 
 The new architecture is based on ROS and Ubuntu and consists of 4 hardware parts: Jetson Xavier NX, Youbot PC, External PC and Arduino Mega. These devices are divided by their functions, according to the following picture.
 
-<img src="https://user-images.githubusercontent.com/68658068/117140087-472cd500-adad-11eb-933b-a64af6e81570.png" width="50%" height="50%">
+<img src="https://user-images.githubusercontent.com/68658068/117140087-472cd500-adad-11eb-933b-a64af6e81570.png" width="70%" height="70%">
 
 ## **Examples of tasks**
 
