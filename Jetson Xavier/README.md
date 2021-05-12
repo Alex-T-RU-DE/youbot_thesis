@@ -6,4 +6,4 @@ Custom libraries for OpenCV, PCL and utils are represnted in the ROS package vis
 ### demo.cpp
 Main executable starting YOLO inference. This file was completely change to ensure compatibility with ROS. 
 ### DetectionNN.h
-"void draw" is a main function, which draws the detected YOLO boxes. Based on this function, "drawYOLO" function is implemented. This function uses all features of vision_youbot package.
+"draw" is a main function, which draws the detected YOLO boxes. Based on this function, "drawYOLO" function is implemented. This function uses all features of vision_youbot package to detect objects and send them over ROS.
