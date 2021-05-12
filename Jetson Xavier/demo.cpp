@@ -43,28 +43,28 @@
 class RosYolo
 {
 public:
-	//detection results publisher
-	ros::NodeHandle n_;
-	ros::Publisher yoloBoxesPub_;
+    //detection results publisher
+    ros::NodeHandle n_;
+    ros::Publisher yoloBoxesPub_;
 	
-	//camera intrinsics
-	Eigen::Matrix3d invCamIntrinsics_;
+    //camera intrinsics
+    Eigen::Matrix3d invCamIntrinsics_;
 	
-	//cvbridge frames
-	cv_bridge::CvImagePtr rgbFramePtr_;
+    //cvbridge frames
+    cv_bridge::CvImagePtr rgbFramePtr_;
 	
-	//synchronized subscribers
-	message_filters::Subscriber<sensor_msgs::Image> rgbSub_;
-	message_filters::Subscriber<sensor_msgs::PointCloud2> pcloudSub_;
-	message_filters::TimeSynchronizer<sensor_msgs::Image, sensor_msgs::PointCloud2> sync_;
+    //synchronized subscribers
+    message_filters::Subscriber<sensor_msgs::Image> rgbSub_;
+    message_filters::Subscriber<sensor_msgs::PointCloud2> pcloudSub_;
+    message_filters::TimeSynchronizer<sensor_msgs::Image, sensor_msgs::PointCloud2> sync_;
 	
-	//pcl variables
-	pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcloudFramePtr_;
-	pcl::PointCloud<pcl::PointXYZRGB>::Ptr filteredcloudPtr_;
-	pcl::visualization::PCLVisualizer::Ptr viewer_;
+    //pcl variables
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcloudFramePtr_;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr filteredcloudPtr_;
+    pcl::visualization::PCLVisualizer::Ptr viewer_;
 	
-	//tf variables
-	tf2_ros::Buffer tfBuffer_;
+    //tf variables
+    tf2_ros::Buffer tfBuffer_;
     tf2_ros::TransformListener tfListener_;
     geometry_msgs::TransformStamped currentCamInBaseFrame_;
     float currentPlaneHeight_ = 0;
@@ -88,53 +88,53 @@ public:
    
     
     RosYolo(bool show_im, bool show_cl) : rgbSub_(n_, "/camera/color/image_raw", 1),
-										  pcloudSub_(n_, "/camera/depth_registered/points",1),
-										  sync_(rgbSub_, pcloudSub_, 10),
-										  pcloudFramePtr_(new pcl::PointCloud<pcl::PointXYZRGB>),
-										  filteredcloudPtr_(new pcl::PointCloud<pcl::PointXYZRGB>),
-										  tfListener_(tfBuffer_)
+					  pcloudSub_(n_, "/camera/depth_registered/points",1),
+					  sync_(rgbSub_, pcloudSub_, 10),
+					  pcloudFramePtr_(new pcl::PointCloud<pcl::PointXYZRGB>),
+					  filteredcloudPtr_(new pcl::PointCloud<pcl::PointXYZRGB>),
+					  tfListener_(tfBuffer_)
     { 
-		//get flags
-		showImage_ = show_im;
-		showCloud_ = show_cl;
-		
-		//get inverted camera intrinsics for deprojection
-		std::cout << "waiting for camera intrinsics" << std::endl;
-		sensor_msgs::CameraInfo::ConstPtr camInfo = ros::topic::waitForMessage<sensor_msgs::CameraInfo>("/camera/aligned_depth_to_color/camera_info",n_);   
-		std::cout << "intrinsics received" << std::endl;   
-		
-		Eigen::Matrix<double,3,3,Eigen::RowMajor> camIntrinsics ( camInfo->K.data() );
-		invCamIntrinsics_ = camIntrinsics.inverse();
-		
-		//init publishers and subscribers
-		sync_.registerCallback(&RosYolo::cameraCallback_, this);
-		yoloBoxesPub_ = n_.advertise<vision_youbot::DetectedObjArr>("detected_objects", 1);
-		
-		//create cloud viewer
-		if(showCloud_)
-		{
-			pcl::visualization::PCLVisualizer::Ptr v (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-			viewer_ = v;
-			
-			viewer_->setBackgroundColor(0, 0, 0);
-			viewer_->addCoordinateSystem();
-			viewer_->initCameraParameters();
-		}
-		
-		//create image window
-		if(showImage_)
-		{
-			cv::namedWindow("detection", cv::WINDOW_NORMAL);
-		}
-		
-		//init tkDNN
-		net = "yolo4_custom_fp16.rt";
-		n_classes = 2;
-		n_batch = 1;
-		conf_thresh=0.3;   
+	//get flags
+	showImage_ = show_im;
+	showCloud_ = show_cl;
 
-		detNN = &yolo;
-		detNN->init(net, n_classes, n_batch, conf_thresh);
+	//get inverted camera intrinsics for deprojection
+	std::cout << "waiting for camera intrinsics" << std::endl;
+	sensor_msgs::CameraInfo::ConstPtr camInfo = ros::topic::waitForMessage<sensor_msgs::CameraInfo>("/camera/aligned_depth_to_color/camera_info",n_);   
+	std::cout << "intrinsics received" << std::endl;   
+
+	Eigen::Matrix<double,3,3,Eigen::RowMajor> camIntrinsics ( camInfo->K.data() );
+	invCamIntrinsics_ = camIntrinsics.inverse();
+
+	//init publishers and subscribers
+	sync_.registerCallback(&RosYolo::cameraCallback_, this);
+	yoloBoxesPub_ = n_.advertise<vision_youbot::DetectedObjArr>("detected_objects", 1);
+
+	//create cloud viewer
+	if(showCloud_)
+	{
+		pcl::visualization::PCLVisualizer::Ptr v (new pcl::visualization::PCLVisualizer ("3D Viewer"));
+		viewer_ = v;
+
+		viewer_->setBackgroundColor(0, 0, 0);
+		viewer_->addCoordinateSystem();
+		viewer_->initCameraParameters();
+	}
+
+	//create image window
+	if(showImage_)
+	{
+		cv::namedWindow("detection", cv::WINDOW_NORMAL);
+	}
+
+	//init tkDNN
+	net = "yolo4_custom_fp16.rt";
+	n_classes = 2;
+	n_batch = 1;
+	conf_thresh=0.3;   
+
+	detNN = &yolo;
+	detNN->init(net, n_classes, n_batch, conf_thresh);
     }
 
     ~RosYolo()
@@ -143,8 +143,8 @@ public:
     }
     
     //callback from camera
-	void cameraCallback_(const sensor_msgs::Image::ConstPtr& rgbmsg, const sensor_msgs::PointCloud2ConstPtr& pcloudmsg)
-	{
+    void cameraCallback_(const sensor_msgs::Image::ConstPtr& rgbmsg, const sensor_msgs::PointCloud2ConstPtr& pcloudmsg)
+    {
 		//get tf
 		try
 		{	
@@ -155,7 +155,7 @@ public:
 			ROS_WARN("Could NOT transform arm_camera_link to base_ground: %s", ex.what());
 			return;
 		}
-		
+
 		//parse images from cvbridge
 		try
 		{
@@ -166,17 +166,17 @@ public:
 		  ROS_ERROR("cv_bridge exception: %s", e.what());
 		  return;
 		}
-		
+
 		//parse point cloud
 		pcl::fromROSMsg(*pcloudmsg, *pcloudFramePtr_);
 		youbot_pcl::cloudPreprocess(pcloudFramePtr_, filteredcloudPtr_);
-		
+
 		if(filteredcloudPtr_->size() >= 10)
 		{
 			//get height of a service area
 			std::vector<pcl::PointXYZRGB> planePoints = youbot_pcl::planarSegmentation(filteredcloudPtr_);
 			currentPlaneHeight_ = youbot_utils::getPlaneHeight(planePoints, currentCamInBaseFrame_);
-			
+
 			//prepare image
 			batch_dnn_input.clear();
 			batch_frame.clear();
@@ -185,17 +185,17 @@ public:
 				batch_frame.push_back(rgbFramePtr_->image);
 				batch_dnn_input.push_back(rgbFramePtr_->image.clone());
 			} 
-			   
+
 			//execute yolo
 			detNN->update(batch_dnn_input, n_batch);
 			detNN->drawYOLO(currentPlaneHeight_, currentCamInBaseFrame_, invCamIntrinsics_, pcloudFramePtr_, batch_frame, yoloBoxesPub_, showImage_);
-			
+
 			//show cloud
 			if(showCloud_)
 			{
 				youbot_pcl::updateCloudViewer(viewer_, filteredcloudPtr_);
 			}
-			
+
 			//show processed image
 			if(showImage_)
 			{  
