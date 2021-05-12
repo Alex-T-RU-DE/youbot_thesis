@@ -17,6 +17,5 @@ namespace youbot_pcl
 	void updateCloudViewer(pcl::visualization::PCLVisualizer::Ptr viewer, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
 	void cloudPreprocess(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::PointXYZRGB>::Ptr filteredcloud);
 	std::vector<pcl::PointXYZRGB> planarSegmentation(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
-	
 }
 #endif
