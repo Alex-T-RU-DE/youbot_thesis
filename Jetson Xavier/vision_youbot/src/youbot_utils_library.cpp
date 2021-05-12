@@ -24,7 +24,7 @@ namespace youbot_utils
 		{
 			float tp = pointHeightInRobotFrame(p.x, p.y, p.z, camToBase);
 			median += tp;
-	    }
+	        }
 	    
 		return median/planePoints.size();
 	}
@@ -235,19 +235,22 @@ namespace youbot_utils
 		
 		//get scale factor
 		float cameraHeight = camToBase.transform.translation.z;
-	    float scale = (planeHeight -cameraHeight) / baseRay.z;
+	    	float scale = (planeHeight -cameraHeight) / baseRay.z;
 	 
 		//get coordinates on plane
-	    float x = camToBase.transform.translation.x + baseRay.x * scale;
-        float y = camToBase.transform.translation.y + baseRay.y * scale;
-        
-        cv::Point2f planePoint (x, y);
-        return planePoint;
+	   	float x = camToBase.transform.translation.x + baseRay.x * scale;
+		float y = camToBase.transform.translation.y + baseRay.y * scale;
+
+		cv::Point2f planePoint (x, y);
+		return planePoint;
 	}
     
  
-    float getObjectWidth(cv::Point centerPix, cv::Point sizePix, float massCenterHeight, Eigen::Matrix<double,3,3,Eigen::RowMajor> inv_cam_intrinsics, geometry_msgs::TransformStamped& camToBase)
-    {
+	float getObjectWidth(cv::Point centerPix, cv::Point sizePix, 
+			     float massCenterHeight, 
+			     Eigen::Matrix<double,3,3,Eigen::RowMajor> inv_cam_intrinsics, 
+			     geometry_msgs::TransformStamped& camToBase)
+	{
 		//get a distance in robot frame between centroid and sizepoint
 		cv::Point2f ce = youbot_utils::getPointOnPlane(centerPix, massCenterHeight*2, inv_cam_intrinsics, camToBase);
 		cv::Point2f si = youbot_utils::getPointOnPlane(sizePix, massCenterHeight*2, inv_cam_intrinsics, camToBase);
