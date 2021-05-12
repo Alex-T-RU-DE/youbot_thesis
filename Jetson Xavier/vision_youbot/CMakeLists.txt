@@ -155,36 +155,6 @@ add_library(youbot_utils_library
 target_link_libraries(youbot_utils_library ${catkin_LIBRARIES})
 
 
-# add_executable(youbot_opencv src/youbot_opencv.cpp)
-# target_link_libraries(youbot_opencv
- #   ${catkin_LIBRARIES}
- #   ${OpenCV_LIBRARIES}
-#    ${PROJECT_NAME}
-# )
-# add_dependencies(youbot_opencv ${${PROJECT_NAME}_EXPORTED_TARGETS} 
-# ${catkin_EXPORTED_TARGETS})
-
-add_executable(distance_center src/distance_center.cpp)
-target_link_libraries(distance_center
-   ${catkin_LIBRARIES}
-   ${OpenCV_LIBRARIES}
-   youbot_utils_library
-   youbot_pcl_library
-pcl_visualization
-)
-add_dependencies(distance_center ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-add_executable(homography src/homography.cpp)
-target_link_libraries(homography
-   ${catkin_LIBRARIES}
-   ${OpenCV_LIBRARIES}
-   youbot_utils_library
-   youbot_pcl_library
-pcl_visualization
-)
-add_dependencies(homography ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
