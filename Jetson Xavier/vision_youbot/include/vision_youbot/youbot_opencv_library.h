@@ -13,21 +13,13 @@
 namespace youbot_opencv
 {
 	std::vector<std::vector<cv::Point> > contoursAndCanny(cv::Mat &croppedImg);
-
 	std::vector<cv::Point> findTheBiggestContour(std::vector<std::vector<cv::Point> > &contours);
-
 	void drawOneContour(cv::Mat& img, std::vector<cv::Point>& c);
-
 	std::vector<cv::Point> findCorners(std::vector<cv::Point>& c);
-
 	std::vector<cv::Point> findConvexHull(std::vector<cv::Point>& c);
-
 	cv::PCA pca (std::vector<cv::Point> &c);
-
 	std::vector<cv::Point> PCAPose(cv::Mat &croppedImg, std::vector<cv::Point> &c);
-
 	std::vector<cv::Point> rectPose (cv::Mat &croppedImg, std::vector<cv::Point> &c);
-
 	std::vector<cv::Point> getObjectPose(float xs,float ys, cv::Mat croppedImg,  int classname, bool show_image);
 }
 #endif
