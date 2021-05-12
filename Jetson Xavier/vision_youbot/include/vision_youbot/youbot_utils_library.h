@@ -28,5 +28,5 @@ namespace youbot_utils
 	void getObjectState(float objectHeight, float objectWidth, int classNumber, vision_youbot::DetectedObj& objMsg);
 	cv::Point2f getPointOnPlane(cv::Point uv, float planeHeight, Eigen::Matrix<double,3,3,Eigen::RowMajor> inv_cam_intrinsics, geometry_msgs::TransformStamped& camToBase);
 	float getObjectWidth(cv::Point centerPix, cv::Point widthPix, float massCenterHeight, Eigen::Matrix<double,3,3,Eigen::RowMajor> inv_cam_intrinsics, geometry_msgs::TransformStamped& camToBase);
-	}
+}
 #endif
