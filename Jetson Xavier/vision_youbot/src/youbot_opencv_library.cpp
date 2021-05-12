@@ -1,15 +1,16 @@
 #include "vision_youbot/youbot_opencv_library.h"
 namespace youbot_opencv
 {
-	std::vector<std::vector<cv::Point> > contoursAndCanny(cv::Mat &croppedImg){
+	std::vector<std::vector<cv::Point> > contoursAndCanny(cv::Mat &croppedImg)
+	{
 		//grayscale
 		cv::Mat gray;
 		cv::cvtColor(croppedImg, gray, cv::COLOR_BGR2GRAY);
 		//blur
 		cv::medianBlur(gray,gray, 5);
-	    //canny
+	        //canny
 		cv::Canny(gray,gray, 20,200);
-	    //dilation
+	        //dilation
 		cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3,3));
 		cv::dilate(gray, gray, kernel);
 		//get contours
@@ -18,39 +19,42 @@ namespace youbot_opencv
 		cv::findContours(gray, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 	  
 		return contours;
-		
 	}
 
-	std::vector<cv::Point> findTheBiggestContour(std::vector<std::vector<cv::Point> > &contours){
+	std::vector<cv::Point> findTheBiggestContour(std::vector<std::vector<cv::Point> > &contours)
+	{
 		double maxArea = 0;
 		int maxAreaContourId = -1;
-		for (int j = 0; j < contours.size(); j++) {
+		for (int j = 0; j < contours.size(); j++) 
+		{
 			double newArea = cv::contourArea(contours.at(j));
-			if (newArea > maxArea) {
+			if (newArea > maxArea) 
+			{
 				maxArea = newArea;
 				maxAreaContourId = j;
 			} 
 		} 
 		
 		std::vector<cv::Point> c;
-		
-		if(maxAreaContourId == -1){
+		if(maxAreaContourId == -1)
+		{
 			return c;
 		} 
-		
 		c = contours.at(maxAreaContourId);
-	
+		
 		return c;
 	}
 
-	void drawOneContour(cv::Mat& img, std::vector<cv::Point>& c){
+	void drawOneContour(cv::Mat& img, std::vector<cv::Point>& c)
+	{
 		std::vector<std::vector<cv::Point> > draw; 
 		draw.push_back(c);
 		cv::Scalar color(0,255,0);
 		cv::drawContours(img, draw, -1, color);
 	}
 
-	std::vector<cv::Point> findCorners(std::vector<cv::Point>& c){
+	std::vector<cv::Point> findCorners(std::vector<cv::Point>& c)
+	{
 		double peri = cv::arcLength(c, true);
 		std::vector<cv::Point> approx;
 		cv::approxPolyDP(c, approx, 0.04 * peri, true);
@@ -59,16 +63,15 @@ namespace youbot_opencv
 		return approx;
 	}
 
-	std::vector<cv::Point> findConvexHull(std::vector<cv::Point>& c){
-		
+	std::vector<cv::Point> findConvexHull(std::vector<cv::Point>& c)
+	{
 		std::vector<cv::Point> hull;
-		
 		cv::convexHull(c, hull);
-		
 		return hull;
 	}
 
-	cv::PCA pca (std::vector<cv::Point> &c){
+	cv::PCA pca (std::vector<cv::Point> &c)
+	{
 		
 		int sz = static_cast<int>(c.size());
 		cv::Mat data_pts = cv::Mat(sz, 2, CV_64F);
@@ -127,8 +130,9 @@ namespace youbot_opencv
 		cv::Point2f vertices[4];
 		rect.points(vertices);
 		for (int i = 0; i < 4; i++)
-		   line(croppedImg, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0), 2);
-		
+		{
+			line(croppedImg, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0), 2);
+		}
 		//calculate rectangle`s edges
 		cv::Point2f edge1 = cv::Vec2f(vertices[1].x, vertices[1].y) - cv::Vec2f(vertices[0].x, vertices[0].y);
 		cv::Point2f edge2 = cv::Vec2f(vertices[2].x, vertices[2].y) - cv::Vec2f(vertices[1].x, vertices[1].y);
