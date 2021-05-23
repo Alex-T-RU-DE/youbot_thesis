@@ -1,7 +1,7 @@
 ## **Overview**
 The purpose of this project is a development of an autonomous mobile robot for [RoboCup@Work](https://github.com/robocup-at-work) competition. The robot is based on KUKA Youbot and can perform various tasks such as autonomous manipulation, computer vision, navigation, task planning.
 
-<img src="https://user-images.githubusercontent.com/68658068/117144515-4cd8e980-adb2-11eb-97a5-2092d1c4e241.jpg" width="70%" height="70%">
+<img src="https://user-images.githubusercontent.com/68658068/117144515-4cd8e980-adb2-11eb-97a5-2092d1c4e241.jpg" width="60%" height="60%">
 
 The new architecture is based on ROS and Ubuntu and consists of 4 hardware parts: Jetson Xavier NX, Youbot PC, External PC and Arduino Mega. These devices are divided by their functions, according to the following picture.
 
