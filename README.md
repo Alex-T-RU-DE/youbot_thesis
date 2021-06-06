@@ -18,6 +18,7 @@ Grasp strategies adapting to objects pose
 
 [![1 jpg](https://user-images.githubusercontent.com/68658068/117087200-0f8f4000-ad4f-11eb-981b-324fa5b17c49.jpg)](https://youtu.be/eHf56aguuII)
 
+Objects delivery
 
 ## **Areas of work**
 
