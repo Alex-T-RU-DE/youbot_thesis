@@ -9,7 +9,7 @@ The new architecture is based on ROS and Ubuntu and consists of 4 hardware parts
 
 <img src="https://user-images.githubusercontent.com/68658068/117140087-472cd500-adad-11eb-933b-a64af6e81570.png" width="70%" height="70%">
 
-## **Examples of tasks**
+## **Videos**
 Grasp strategies adapting to objects pose
 [![hqdefault](https://user-images.githubusercontent.com/68658068/120919724-6031ea00-c6bb-11eb-9e0a-df7c02995d1c.jpg)](https://youtu.be/S5ihl4ivemE)
 
