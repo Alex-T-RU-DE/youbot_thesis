@@ -21,6 +21,10 @@ Grasp strategies adapting to objects pose
 Objects delivery
 
 TBD
+
+Navigation
+
+TBD
 ## **Areas of work**
 
 -[Computer vision](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/Computer-vision) \
