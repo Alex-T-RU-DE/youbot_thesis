@@ -1,3 +1,4 @@
+
 ## **Overview**
 The purpose of this project is a development of an autonomous mobile robot for [RoboCup@Work](https://github.com/robocup-at-work) competition. The robot is based on KUKA Youbot and can perform various tasks such as autonomous manipulation, computer vision, navigation, task planning.
 
