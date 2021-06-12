@@ -1,6 +1,6 @@
 
 ## **Demonstration**
-Grasp and delivery of objects to containers and cavities :
+Grasp and delivery of objects to containers and cavities:
 
 [![cont](https://user-images.githubusercontent.com/68658068/121780699-d219a000-cba1-11eb-99ab-4ef5c65b8b7b.jpg)](https://youtu.be/ldB88x4FVSY)
 [![cavi](https://user-images.githubusercontent.com/68658068/121780694-ce861900-cba1-11eb-836c-401d5c886550.jpg)](https://youtu.be/rGVe_tpEly4)
