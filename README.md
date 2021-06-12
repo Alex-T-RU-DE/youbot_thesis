@@ -24,6 +24,7 @@ The new architecture is based on ROS and Ubuntu and consists of 4 hardware parts
 
 <img src="https://user-images.githubusercontent.com/68658068/117140087-472cd500-adad-11eb-933b-a64af6e81570.png" width="55%" height="55%">
 
+Code samples:
 ## **Areas of work**
 
 -[Computer vision](https://github.com/mikhail-chirkov/youbot_master_thesis_or_project/wiki/Computer-vision) \
